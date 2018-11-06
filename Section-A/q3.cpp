@@ -1,96 +1,94 @@
 #include<iostream>
+
 using namespace std;
 
+bool queensafe(char **board, int n, int row, int col)
+{
+	/*
+	description: this function checks if queen is safe at a given position or not
+	variables used: -> i,j-used to traverse through the board
+	return value: true if queen is safe at given position, else false
+	*/
+	int i,j;
+	for(i=0; i<col; i++)
+		if(board[row][i]=='Q')
+			return false;
+	for (i=row, j=col; i>=0 && j>=0; i--, j--) 
+        	if (board[i][j]=='Q') 
+            		return false;
+	for (i=row, j=col; j>=0 && i<n; i++, j--) 
+	        if (board[i][j]=='Q') 
+	        	return false; 
+  
+	return true; 
+} 
 
-bool canPlace(char board[][100],int row,int col,int n){
-
-                                //  searching for valid space row wise
-    for(int i=0;i<n;i++){
-        if(board[row][i]=='Q'){
-            return false;
-        }
-    }
-                                // searching for valid space column wise
-    for(int i=0;i<n;i++){
-        if(board[i][col]=='Q'){
-            return false;
-        }
-    }
-                                // searching for diagnols places
-                                //  from top left
-    int i=row,j=col;
-    while(i>=0&&j>=0){
-        if(board[i][j]=='Q'){
-            return false;
-        }
-        i--;
-        j--;
-    }
-                                // from top right
-    i=row,j=col;
-    while(i>=0 && j<n){
-        if(board[i][j]=='Q'){
-            return false;
-        }
-        i--;
-        j++;
-    }
-
-    return true;
+void printboard(char **board, int n)
+{
+	/*
+	description: this function prints the current board
+	variables used: -> i,j-used to traverse through the board
+	return value: none
+	*/
+	cout<<"\n===========\n";
+	for(int i=0; i<n; i++)
+	{
+		for(int j=0; j<n; j++)
+			cout<<board[i][j]<<"  ";
+		cout<<"\n";
+	}
 }
 
 
-
-bool solveNQueen(char board[][100],int n,int row){
-    if(row==n){
-                        // Print the board
-        for(int x=0;x<n;x++){
-            for(int y=0;y<n;y++){
-                cout<<board[x][y]<<" ";
-            }
-            cout<<endl;
-
-        }
-
-        return true;
-    }
-
-    
-                                    //  Try to place the queen in the current row
-
-    for(int pos=0;pos<n;pos++){
-
-            if(canPlace(board,row,pos,n)){
-                    board[row][pos]='Q';
-
-                    bool agliQueenRakhPayeKya = solveNQueen(board,n,row+1);
-                    if(agliQueenRakhPayeKya==true){
-                        return true;
-                    }
-
-                    board[row][pos]='.';
-            }
-
-    }
-    ///Backtracking
-    return false;
+bool nqueen(char **board, int n, int x)
+{	
+	/*
+	description: this function creates a board combination where all n queens are safe
+	variables used: -> i-used for traversal
+	return value: returns true if combination is possible where all queens are safe, else returns false
+	*/
+	if(x==n)
+	{
+		printboard(board,n);
+		return true;
+	}
+	bool a = false;
+	if(x>=n)
+		return true;
+	for(int i=0; i<n; i++)
+	{
+		if(queensafe(board,n,i,x))
+		{
+			board[i][x]='Q';
+			a=nqueen(board, n, x+1) || a;
+			board[i][x]='-';
+		}
+	}
+	return a;
 }
 
-int main(){
 
-    char board[100][100];
-
-    int n;
-    cin>>n;
-
-    for(int x=0;x<n;x++){
-            for(int y=0;y<n;y++){
-                board[x][y]='.';
-            }
-
-        }
-    solveNQueen(board,n,0);
-
-
-return 0;
+int main()
+{
+	/*
+	description: driver function for the n-queens problem
+	variables used: -> n-stores value of number of queens
+			-> board-holds queen positions on the board
+	return value: returns 0 if program executes successfully
+	*/
+	int n;
+	cout<<"\nEnter value of N: ";
+	cin>>n;
+	char **board = new char*[n];
+	for(int i=0; i<n; i++)
+		board[i] = new char[n];
+	for(int i=0; i<n; i++)
+		for(int j=0; j<n; j++)
+			board[i][j]='-';
+	if(nqueen(board,n,0)==false)
+	{
+		cout<<"\nNo solution exists";
+	}	
+	delete board;
+	return 0;
 }
