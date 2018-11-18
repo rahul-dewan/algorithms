@@ -1,0 +1,93 @@
+	Approach:
+
+			Technique Used: Dynamic Programming
+							( Because there exists overlapping subproblems).
+							(optimal solution of each subproblem is stored in table for
+							 future references).
+
+			Performed using iteration and recursion.
+
+			For Example :
+
+				Let say n = 6, k = 2:
+
+				First a matrix of 6X6 is created with the above specified initial values.
+
+				arr =  	    1   2   3   4   5   6
+						  -------------------------
+						1 | 1   0   0   0   0   0 |
+						2 | 0   1   0   0   0   0 |
+						3 | 0   0   1   0   0   0 |
+						4 | 0   0   0   1   0   0 |
+						5 | 0   0   0   0   1   0 |
+						6 | 0   0   0   0   0   1 |
+						  -------------------------
+
+				Iteration: i = 1
+						   j = 0
+
+						    1   2   3   4   5   6
+						  -------------------------
+						1 | 1   0   0   0   0   0 |
+						2 | 0   1   0   0   0   0 |
+						3 | 0   0   1   0   0   0 |
+						4 | 0   0   0   1   0   0 |
+						5 | 0   0   0   0   1   0 |
+						6 | 0   0   0   0   0   1 |
+						  -------------------------  
+
+
+				Iteration: i = 2
+						   j = 1
+
+						    1   2   3   4   5   6
+						  -------------------------
+						1 | 1   0   0   0   0   0 |
+						2 | 1   1   0   0   0   0 |
+						3 | 0   0   1   0   0   0 |
+						4 | 0   0   0   1   0   0 |
+						5 | 0   0   0   0   1   0 |
+						6 | 0   0   0   0   0   1 |
+						  -------------------------  
+
+				Iteration: i = 3
+						   j = 1,2
+
+						    1   2   3   4   5   6
+						  -------------------------
+						1 | 1   0   0   0   0   0 |
+						2 | 2   1   0   0   0   0 |
+						3 | 3   1   1   0   0   0 |
+						4 | 5   2   1   1   0   0 |
+						5 | 7   2   1   1   1   0 |
+						6 | 11  4   2   1   1   1 |
+						  -------------------------  
+
+				return arr[6,2] : thus ans is '4' 		  
+
+
+			Time Complexity:  theta(n^2)
+			Space Complexity: theta(n^2)
+psedocode:
+
+				no_of_antiSquad(n,k) :
+
+					declare a matrix 'arr' of dimension 'nXn'.
+					// initialise the matrix :
+						for i = 1 to n                                 		----------- executing n times
+							for j = 1 to n 									----------- executing n times in each iteration of i.
+								whenever i != j
+									arr[i,j] = 0
+								else
+									arr[i,j] = 1
+					
+					// to find no of anti_squad groups that can be formed are:
+					// Using the Bottom-Up Approach
+
+						for i = 1 to n 										----------- executing n times
+							for j = i-1 to 1								----------- for each i, it is executing i-1
+								arr[i,j] = arr[i-j,j] + arr[i,j+1]
+
+					// to find noof antiSquad groups for n,k is :
+
+						return arr[n,k]
